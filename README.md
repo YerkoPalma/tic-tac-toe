@@ -12,6 +12,11 @@
     <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square"
       alt="Standard" />
   </a>
+  <!-- Build -->
+  <a href="https://travis-ci.org/YerkoPalma/tic-tac-toe">
+    <img src="https://img.shields.io/travis/YerkoPalma/tic-tac-toe/master.svg?style=flat-square"
+      alt="Build Status" />
+  </a>
   <!-- Choo -->
   <a href="https://github.com/yoshuawuyts/choo">
     <img src="https://img.shields.io/badge/built%20with%20choo-v3-ffc3e4.svg?style=flat-square"
