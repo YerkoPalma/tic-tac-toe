@@ -1,0 +1,123 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 42px;
+  color: #0f0e0b;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: space-around;
+}
+.wrapper {
+  width: 100%;
+  align-content: space-around;
+}
+
+.config-panel {
+  align-content: space-between;
+  align-items: center;
+  display: flex;
+  width: 40%;
+  align-self: center;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+input {
+  align-self: center;
+  width: 80%;
+  padding: 12px 6px;
+  border: 1px solid #777;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+button {
+  width: 20%;
+  padding: 12px 6px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  border: 1px solid #777;
+  border-left: 0;
+  outline: 0;
+  cursor: pointer;
+}
+button:hover {
+    background-color: #bbb;
+}
+.board {
+  display: flex;
+  width: 100%;
+  padding: 20px 50px;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.board > table {
+  align-self: center;
+  margin: 0 auto;
+  width: 40%;
+  position: relative;
+}
+.board > table tr {
+  height: 100px;
+  background-color: #FEFFB8;
+}
+.board > table tr > td {
+  width: 33.33333%;
+  color: transparent;
+}
+.board > table tr > td:hover {
+  cursor: pointer;
+  color: #C9CAA4;
+}
+.board > table tr > td.selected,
+.board > table tr > td.selected:hover {
+  color: #333;
+}
+.board > table tr > td.marked {
+  background-color: #FFDC00;
+}
+.board > table td > span {
+  font-size: 70px;
+  margin-left: 60px;
+}
+.board > table.finished > .finish-panel {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.board > table.finished > .finish-panel .clearfix {
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
+}
+.board > table.finished > .finish-panel > h3 {
+  text-align: center;
+    font-size: 3em;
+}
+.board > table.finished > .finish-panel .clearfix > button:first-child {
+  min-width: 150px;
+  border-radius: 5px;
+  border: 1px solid #777;
+  float: left;
+  margin-left: 50px;
+}
+.board > table.finished > .finish-panel .clearfix > button:last-child {
+  min-width: 150px;
+  border-radius: 5px;
+  border: 1px solid #777;
+  float: right;
+  margin-right: 50px;
+}
