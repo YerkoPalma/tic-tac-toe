@@ -3,3 +3,10 @@ node_js:
 language: node_js
 before_script:
   - npm install -g standard snazzy
+before_deploy:
+  - npm run build
+deploy:
+  provider: surge
+  project: ./dist/
+  domain: tic-tac-choo.surge.sh
+  skip_cleanup: true
