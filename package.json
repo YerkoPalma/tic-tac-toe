@@ -6,7 +6,7 @@
   "scripts": {
     "deps": "dependency-check . && dependency-check . --extra --no-dev --ignore-module normalize.css",
     "copy": "mkdir -p dist && cp src/index.html CNAME dist/",
-    "dev": "budo src/app.js --open --live --pushstate --",
+    "dev": "budo src/app.js -d src -H localhost --open --live --pushstate --",
     "build": "npm run copy && NODE_ENV=production browserify -e src/app.js -o dist/app.js -t envify -t sheetify/transform -g unassertify -g es2040 -g uglifyify | uglifyjs",
     "test": "standard --verbose | snazzy && npm run deps",
     "deploy": "npm run build && surge ./dist"
