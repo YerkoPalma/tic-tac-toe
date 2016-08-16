@@ -1,4 +1,5 @@
 const choo = require('choo')
+const Dexie = require('dexie')
 const sf = require('sheetify')
 const mainView = require('./views/main')
 const gameView = require('./views/game')
@@ -22,3 +23,13 @@ app.router(route => [
 
 const tree = app.start()
 document.body.appendChild(tree)
+
+document.addEventListener('DOMContentLoaded', e => {
+  // As soon as the content is ready, open the local db and add whatever is in the firebase db
+  Dexie.getDatabaseNames(dbName => {
+    let db = new Dexie('tic-tac-toe')
+    db.version(1).stores({
+      todos: '++id,name,last-game,wins,loses,rank'
+    })
+  })
+})

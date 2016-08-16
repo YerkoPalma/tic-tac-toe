@@ -23,3 +23,19 @@
       alt="built with choo v3" />
   </a>
 </div>
+
+## TODO
+
+- Record users if they don't exists
+- Record matches when they finish
+- Update data when games finish
+- Add board to `board` view including, wins, loses and rank
+  - Create the user-info component
+  - Create the effects to update
+  - Update from firebase
+  - Update from indexedDb
+- Add top 5 users in `main` view including username, wins, loses, last-connection
+  - Create the board component
+  - Create the effects to update
+  - Update from firebase
+  - Update from indexedDb 

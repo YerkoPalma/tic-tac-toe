@@ -25,6 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "choo": "^3.0.2",
+    "dexie": "^1.4.1",
     "normalize.css": "^4.2.0"
   },
   "devDependencies": {
