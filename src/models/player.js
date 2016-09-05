@@ -1,3 +1,11 @@
+const http = require('choo/http')
+const Dexie = require('dexie')
+const url = 'https://tic-tac-toe.firebaseio.com/users.json'
+let db = new Dexie('tic-tac-toe')
+db.open().catch(err => {
+  console.log(err)
+})
+
 module.exports = {
   namespace: 'player',
   state: {
@@ -5,7 +13,8 @@ module.exports = {
     id: '',
     figure: 'X',
     points: 0,
-    multiplayer: false
+    multiplayer: false,
+    topFive: []
   },
   reducers: {
     /**
@@ -27,6 +36,11 @@ module.exports = {
         figure: 'X',
         points: 0,
         multiplayer: false
+      }
+    },
+    setTopFive: (data, state) => {
+      return {
+        topFive: data.users
       }
     }
   },
@@ -89,8 +103,44 @@ module.exports = {
       send('player:init',
         { player: document.getElementById('player').value },
         done)
+      // also save a new user, or update a new connection from user
+      // is a http request not a reducer call
+      let user = {}
+      http.post(url, { json: { user }}, (err, response) => {
+        if (err) {
+          console.log(err)
+          db.users.add(user)
+            .then(function () {
+              send('player:update', { user })
+            })
+        }
+        
+      })
       send('location:setLocation', { location: '/game' }, done)
       window.history.pushState({}, null, '/game')
+    },
+    setLocalTopFive: (data, state, send, done) => {
+      // set users from data.users
+      send('player:setTopFive', { users: data.users })
+    },
+    getRemoteTopFive: (data, state, send, done) => {
+      // set users from firebase
+      // make an http request for that
+      http.get(url, (err, response) => {
+        if (err) {
+          console.log(err)
+          return
+        }
+        // uggly hack for firebase
+        const jsonData = JSON.parse(response.body)
+        const responseKeys = Object.keys(jsonData)
+        const realResponse = responseKeys.map(function (key) {
+          let returned = jsonData[key]
+          returned._id = key
+          return returned
+        })
+        send('player:setTopFive', { users: realResponse })
+      })
     }
   }
 }

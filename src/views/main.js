@@ -1,11 +1,11 @@
 const html = require('choo/html')
-const http = require('choo/http')
 const Dexie = require('dexie')
-const configPlayer = require('./config-player')
+const configPlayer = require('../components/config-player')
+const url = 'https://tic-tac-toe.firebaseio.com/users.json'
 
 const mainView = (state, prev, send) => {
   return html`
-    <div class="container" onload=${getTopPlayers('https://tic-tac-toe.firebaseio.com/users.json')}>
+    <div class="container" onload=${getTopPlayers(url, send)}>
       <h1>Tic tac toe powered by choo</h1>
       <hr>
       <div class="wrapper center">
@@ -31,10 +31,16 @@ function getTopPlayers (playersUrl, send) {
         .limit(5)
         .toArray()
         .then(users => {
-          // should update the view here
+          // update the view here with local data
+          // should be instantly
+          send('player:setLocalTopFive', { users })
         })
     })
     .catch(err => {
       console.log(err)
+    })
+    .finally(() => {
+      // get data from the network
+      send('player:getRemoteTopFive')
     })
 }

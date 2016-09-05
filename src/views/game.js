@@ -1,5 +1,5 @@
 const html = require('choo/html')
-const finishedGame = require('./finished-game')
+const finishedGame = require('../components/finished-game')
 
 const createBoard = (state, send) => {
   return html`

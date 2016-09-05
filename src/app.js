@@ -25,11 +25,13 @@ const tree = app.start()
 document.body.appendChild(tree)
 
 document.addEventListener('DOMContentLoaded', e => {
-  // As soon as the content is ready, open the local db and add whatever is in the firebase db
+  // As soon as the content is ready
   Dexie.getDatabaseNames(dbName => {
-    let db = new Dexie('tic-tac-toe')
-    db.version(1).stores({
-      todos: '++id,name,last-game,wins,loses,rank'
-    })
+    if (dbName !== 'tic-tac-toe') {
+      let db = new Dexie('tic-tac-toe')
+      db.version(1).stores({
+        todos: '++id,name,last-game,wins,loses,rank'
+      })
+    }
   })
 })
