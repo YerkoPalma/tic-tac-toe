@@ -1,10 +1,5 @@
 const http = require('choo/http')
-const Dexie = require('dexie')
 const url = 'https://tic-tac-toe.firebaseio.com/users.json'
-let db = new Dexie('tic-tac-toe')
-db.open().catch(err => {
-  console.log(err)
-})
 
 module.exports = {
   namespace: 'player',
@@ -106,15 +101,10 @@ module.exports = {
       // also save a new user, or update a new connection from user
       // is a http request not a reducer call
       let user = {}
-      http.post(url, { json: { user }}, (err, response) => {
+      http.post(url, {json: { user }}, (err, response) => {
         if (err) {
           console.log(err)
-          db.users.add(user)
-            .then(function () {
-              send('player:update', { user })
-            })
         }
-        
       })
       send('location:setLocation', { location: '/game' }, done)
       window.history.pushState({}, null, '/game')

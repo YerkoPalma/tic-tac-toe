@@ -1,5 +1,4 @@
 const html = require('choo/html')
-const Dexie = require('dexie')
 const configPlayer = require('../components/config-player')
 const url = 'https://tic-tac-toe.firebaseio.com/users.json'
 
@@ -22,25 +21,5 @@ module.exports = mainView
  * to show them in the score panel component
  */
 function getTopPlayers (playersUrl, send) {
-  // first update from firebase, because the indexedDB data is already loaded
-  let db = new Dexie('tic-tac-toe')
-  db.open()
-    .then(() => {
-      db.users
-        .orderBy('rank')
-        .limit(5)
-        .toArray()
-        .then(users => {
-          // update the view here with local data
-          // should be instantly
-          send('player:setLocalTopFive', { users })
-        })
-    })
-    .catch(err => {
-      console.log(err)
-    })
-    .finally(() => {
-      // get data from the network
-      send('player:getRemoteTopFive')
-    })
+  send('player:getRemoteTopFive')
 }
