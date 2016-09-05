@@ -1,5 +1,5 @@
-const http = require('choo/http')
-const url = 'https://tic-tac-toe.firebaseio.com/users.json'
+const checkWinner = require('../utils/check')
+const { getPlayers, postPlayer } = require('../utils/api')
 
 module.exports = {
   namespace: 'player',
@@ -8,7 +8,6 @@ module.exports = {
     id: '',
     figure: 'X',
     points: 0,
-    multiplayer: false,
     topFive: []
   },
   reducers: {
@@ -76,7 +75,6 @@ module.exports = {
      * opponent move
      */
     autoMove: (data, state, send, done) => {
-      // TODO: should select the figure of the oponent
       const x = data.autoX
       const y = data.autoY
       // position in the board to be removed
@@ -98,16 +96,16 @@ module.exports = {
       send('player:init',
         { player: document.getElementById('player').value },
         done)
+      // TODO
       // also save a new user, or update a new connection from user
       // is a http request not a reducer call
       let user = {}
-      http.post(url, {json: { user }}, (err, response) => {
-        if (err) {
-          console.log(err)
-        }
+      postPlayer(user).then(response => {
+        send('location:setLocation', { location: '/game' }, done)
+        window.history.pushState({}, null, '/game')
+      }).catch(err => {
+        console.log(err)
       })
-      send('location:setLocation', { location: '/game' }, done)
-      window.history.pushState({}, null, '/game')
     },
     setLocalTopFive: (data, state, send, done) => {
       // set users from data.users
@@ -116,12 +114,7 @@ module.exports = {
     getRemoteTopFive: (data, state, send, done) => {
       // set users from firebase
       // make an http request for that
-      http.get(url, (err, response) => {
-        if (err) {
-          console.log(err)
-          return
-        }
-        // uggly hack for firebase
+      getPlayers().then(response => {
         const jsonData = JSON.parse(response.body)
         const responseKeys = Object.keys(jsonData)
         const realResponse = responseKeys.map(function (key) {
@@ -130,57 +123,9 @@ module.exports = {
           return returned
         })
         send('player:setTopFive', { users: realResponse })
+      }).catch(err => {
+        console.log(err)
       })
     }
   }
-}
-
-/*
- * get the winner of the game and the winner line, or null if no onw has win
- */
-function checkWinner (grid, lastMove, lastPlayer) {
-  let winner
-  let line
-  grid[lastMove.x][lastMove.y] = lastPlayer
-  // row 0
-  if ((grid[0][0] && grid[0][0] !== '') && (grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2])) {
-    winner = grid[0][0]
-    line = [[0, 0], [0, 1], [0, 2]]
-  }
-  // row 1
-  if ((grid[1][0] && grid[1][0] !== '') && (grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2])) {
-    winner = grid[1][0]
-    line = [[1, 0], [1, 1], [1, 2]]
-  }
-  // row 2
-  if ((grid[2][0] && grid[2][0] !== '') && (grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2])) {
-    winner = grid[2][0]
-    line = [[2, 0], [2, 1], [2, 2]]
-  }
-  // column 0
-  if ((grid[0][0] && grid[0][0] !== '') && (grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0])) {
-    winner = grid[0][0]
-    line = [[0, 0], [1, 0], [2, 0]]
-  }
-  // column 1
-  if ((grid[0][1] && grid[0][1] !== '') && (grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1])) {
-    winner = grid[0][1]
-    line = [[0, 1], [1, 1], [2, 1]]
-  }
-  // column 2
-  if ((grid[0][2] && grid[0][2] !== '') && (grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2])) {
-    winner = grid[0][2]
-    line = [[0, 2], [1, 2], [2, 2]]
-  }
-  // diagonal \
-  if ((grid[0][0] && grid[0][0] !== '') && (grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2])) {
-    winner = grid[0][0]
-    line = [[0, 0], [1, 1], [2, 2]]
-  }
-  // diagonal /
-  if ((grid[0][2] && grid[0][2] !== '') && (grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0])) {
-    winner = grid[0][2]
-    line = [[0, 2], [1, 1], [2, 0]]
-  }
-  return { winner, line }
 }

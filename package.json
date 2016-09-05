@@ -24,6 +24,7 @@
   "author": "YerkoPalma",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.14.0",
     "choo": "^3.0.2",
     "normalize.css": "^4.2.0"
   },
