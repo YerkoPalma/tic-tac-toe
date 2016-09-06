@@ -1,18 +1,25 @@
 const axios = require('axios')
-const url = 'https://tic-tac-toe.firebaseio.com/users.json'
+const url = 'https://tic-tac-toe-d4f97.firebaseio.com/users'
 
 /**
  * Get remote players from firebase
  */
 function getPlayers (n) {
-  return axios.get(`${url}?orderBy="score"&limitToLast=${n || 5}`)
+  return axios.get(`${url}.json?orderBy="score"&limitToLast=${n || 5}`)
+}
+
+/**
+ * Get player by name
+ */
+function getPlayer (name) {
+  return axios.get(`${url}/${name}.json`)
 }
 
 /**
  * Save player
  */
 function postPlayer (player) {
-  return axios.post(url, player)
+  return axios.post(`${url}.json`, player)
 }
 
 /**
@@ -23,5 +30,6 @@ function patchPlayer (id, data) {
 }
 
 module.exports.getPlayers = getPlayers
+module.exports.getPlayer = getPlayer
 module.exports.postPlayer = postPlayer
 module.exports.patchPlayer = patchPlayer

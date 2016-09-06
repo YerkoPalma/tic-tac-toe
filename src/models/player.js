@@ -1,5 +1,5 @@
 const checkWinner = require('../utils/check')
-const { getPlayers, postPlayer } = require('../utils/api')
+const { getPlayers, getPlayer, postPlayer, patchPlayer } = require('../utils/api')
 
 module.exports = {
   namespace: 'player',
@@ -7,7 +7,12 @@ module.exports = {
     name: '',
     id: '',
     figure: 'X',
-    points: 0,
+    score: 0,
+    wins: 0,
+    loses: 0,
+    last: new Date(),
+    best: 0,
+    current: 0,
     topFive: []
   },
   reducers: {
@@ -15,10 +20,7 @@ module.exports = {
      * set initial data
      */
     init: (data, state) => {
-      return {
-        name: data.player,
-        id: '1'
-      }
+      return Object.assign(state, data.user)
     },
     /**
      * reset player
@@ -93,18 +95,60 @@ module.exports = {
       }
     },
     join: (data, state, send, done) => {
-      send('player:init',
-        { player: document.getElementById('player').value },
-        done)
-      // TODO
-      // also save a new user, or update a new connection from user
-      // is a http request not a reducer call
-      let user = {}
-      postPlayer(user).then(response => {
-        send('location:setLocation', { location: '/game' }, done)
-        window.history.pushState({}, null, '/game')
+      // check if player already exists
+      const name = document.getElementById('player').value
+      getPlayer(name).then(response => {
+        console.log(response)
+        // if already exists, just updates the info
+        if (response.status === 200 && response.data !== null) {
+          patchPlayer()
+        } else {
+          let user = {
+            name,
+            score: 0,
+            wins: 0,
+            loses: 0,
+            last: new Date(),
+            best: 0,
+            current: 0
+          }
+          postPlayer(user).then(response => {
+            send('player:init',
+            { user },
+            done)
+            send('location:setLocation', { location: '/game' }, done)
+            window.history.pushState({}, null, '/game')
+          }).catch(err => {
+            console.log(err)
+          })
+        }
       }).catch(err => {
-        console.log(err)
+        // if it doesn't exists, save it
+        if (err.response && err.response.data === null) {
+          // The request was made, but the server responded with a status code
+          // that falls out of the range of 2xx
+          let user = {
+            name,
+            score: 0,
+            wins: 0,
+            loses: 0,
+            last: new Date(),
+            best: 0,
+            current: 0
+          }
+          postPlayer(user).then(response => {
+            send('player:init',
+            { user },
+            done)
+            send('location:setLocation', { location: '/game' }, done)
+            window.history.pushState({}, null, '/game')
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', err.message)
+        }
       })
     },
     setLocalTopFive: (data, state, send, done) => {
