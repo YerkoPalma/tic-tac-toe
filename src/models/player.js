@@ -73,7 +73,7 @@ module.exports = {
         if (check.winner === state.figure) {
           foundUser.wins++
           foundUser.score++
-        // defeat 
+        // defeat
         } else if (check.line.length > 0) {
           foundUser.loses++
           foundUser.score--
@@ -121,7 +121,7 @@ module.exports = {
         if (check.winner === state.figure) {
           foundUser.wins++
           foundUser.score++
-        // defeat 
+        // defeat
         } else if (check.line.length > 0) {
           foundUser.loses++
           foundUser.score--
