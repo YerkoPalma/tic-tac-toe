@@ -40,6 +40,9 @@ module.exports = {
       return {
         users: data.users
       }
+    },
+    update: (data, state) => {
+      return Object.assign(state, data.user)
     }
   },
   effects: {
@@ -60,10 +63,26 @@ module.exports = {
       // TODO: before making an oponent move, should evaluate if the payer has won
       const check = checkWinner(data.grid, {x, y}, state.figure)
       if (check.winner && check.winner !== '') {
-        console.log(`The winner is ${check.winner}`)
-        send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
-      }
-      if (!state.multiplayer && availaiblePositions.length > 0) {
+        const foundUser = state.users.find(user => {
+          return user.name === state.name
+        })
+        // victory
+        if (check.winner === state.figure) {
+          foundUser.wins++
+          foundUser.score++
+        // defeat 
+        } else {
+          foundUser.loses++
+          foundUser.score--
+        }
+        patchPlayer(foundUser).then(response => {
+          send('player:update', { user: foundUser }, done)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        }).catch(err => {
+          console.log(err)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        })
+      } else if (!state.multiplayer && availaiblePositions.length > 0) {
         // get random number to retrieve the availaible positions
         const randomPos = Math.floor(Math.random() * availaiblePositions.length)
         const pos = availaiblePositions[randomPos]
@@ -92,8 +111,26 @@ module.exports = {
       send('board:update', { x, y, figure, availaible: availaiblePositions }, done)
       const check = checkWinner(data.grid, {x, y}, figure)
       if (check.winner && check.winner !== '') {
-        console.log(`The winner is ${check.winner}`)
-        send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        const foundUser = state.users.find(user => {
+          return user.name === state.name
+        })
+        // victory
+        if (check.winner === state.figure) {
+          foundUser.wins++
+          foundUser.score++
+        // defeat 
+        } else if (check.line.length > 0) {
+          foundUser.loses++
+          foundUser.score--
+        // draw
+        }
+        patchPlayer(foundUser).then(response => {
+          send('player:update', { user: foundUser }, done)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        }).catch(err => {
+          console.log(err)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        })
       }
     },
     join: (data, state, send, done) => {
@@ -106,7 +143,7 @@ module.exports = {
       if (foundUser) {
         patchPlayer(foundUser).then(response => {
           send('player:init',
-          { user: response.data },
+          { user: response.data[foundUser.fbKey] },
           done)
           send('location:setLocation', { location: '/game' }, done)
           window.history.pushState({}, null, '/game')

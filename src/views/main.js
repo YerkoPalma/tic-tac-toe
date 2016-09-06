@@ -13,7 +13,7 @@ const mainView = (state, prev, send) => {
         ${state.player.users.map(user => {
           return html`
           <div class="user">
-            <p>${user.name}   | ${user.best} </p>
+            <p>${user.name}   | ${user.score} </p>
             <br>
           </div>
           `
