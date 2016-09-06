@@ -20,5 +20,5 @@ app.router(route => [
   route('/game', gameView)
 ])
 
-const tree = app.start()
+const tree = app.start({ hash: true })
 document.body.appendChild(tree)

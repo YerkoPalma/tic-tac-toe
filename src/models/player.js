@@ -22,7 +22,10 @@ module.exports = {
      * set initial data
      */
     init: (data, state) => {
-      return Object.assign(state, data.user, { fbKey: data.fbKey })
+      let users = state.users
+      data.user.fbKey = data.fbKey
+      if (!state.users[data.fbKey]) users.push(data.user)
+      return Object.assign(state, data.user, { fbKey: data.fbKey }, { users })
     },
     /**
      * reset player
@@ -71,7 +74,7 @@ module.exports = {
           foundUser.wins++
           foundUser.score++
         // defeat 
-        } else {
+        } else if (check.line.length > 0) {
           foundUser.loses++
           foundUser.score--
         }
@@ -82,7 +85,7 @@ module.exports = {
           console.log(err)
           send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
         })
-      } else if (!state.multiplayer && availaiblePositions.length > 0) {
+      } else if (availaiblePositions.length > 0) {
         // get random number to retrieve the availaible positions
         const randomPos = Math.floor(Math.random() * availaiblePositions.length)
         const pos = availaiblePositions[randomPos]
