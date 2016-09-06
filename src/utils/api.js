@@ -25,8 +25,18 @@ function postPlayer (player) {
 /**
  * Updates a player
  */
-function patchPlayer (id, data) {
-  
+function patchPlayer (player) {
+  let fbPlayer = {}
+  fbPlayer[player.fbKey] = {
+    best: player.best,
+    last: new Date(),
+    current: player.current,
+    wins: player.wins,
+    loses: player.loses,
+    name: player.name,
+    score: player.score
+  }
+  return axios.patch(`${url}.json`, fbPlayer)
 }
 
 module.exports.getPlayers = getPlayers
