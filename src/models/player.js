@@ -1,4 +1,5 @@
 const checkWinner = require('../utils/check')
+const firebaseUtils = require('../utils/firebase')
 const { getPlayers, getPlayer, postPlayer, patchPlayer } = require('../utils/api')
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
     last: new Date(),
     best: 0,
     current: 0,
-    topFive: []
+    users: []
   },
   reducers: {
     /**
@@ -36,7 +37,7 @@ module.exports = {
     },
     setTopFive: (data, state) => {
       return {
-        topFive: data.users
+        users: data.users
       }
     }
   },
@@ -151,22 +152,12 @@ module.exports = {
         }
       })
     },
-    setLocalTopFive: (data, state, send, done) => {
-      // set users from data.users
-      send('player:setTopFive', { users: data.users })
-    },
     getRemoteTopFive: (data, state, send, done) => {
       // set users from firebase
       // make an http request for that
       getPlayers().then(response => {
-        const jsonData = JSON.parse(response.body)
-        const responseKeys = Object.keys(jsonData)
-        const realResponse = responseKeys.map(function (key) {
-          let returned = jsonData[key]
-          returned._id = key
-          return returned
-        })
-        send('player:setTopFive', { users: realResponse })
+        const jsonData = firebaseUtils.toArray(response.data)
+        send('player:setTopFive', { users: jsonData }, done)
       }).catch(err => {
         console.log(err)
       })

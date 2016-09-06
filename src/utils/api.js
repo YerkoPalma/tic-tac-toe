@@ -4,8 +4,8 @@ const url = 'https://tic-tac-toe-d4f97.firebaseio.com/users'
 /**
  * Get remote players from firebase
  */
-function getPlayers (n) {
-  return axios.get(`${url}.json?orderBy="score"&limitToLast=${n || 5}`)
+function getPlayers () {
+  return axios.get(`${url}.json`)
 }
 
 /**
