@@ -1,6 +1,6 @@
 const checkWinner = require('../utils/check')
 const firebaseUtils = require('../utils/firebase')
-const { getPlayers, getPlayer, postPlayer, patchPlayer } = require('../utils/api')
+const { getPlayers, postPlayer, patchPlayer } = require('../utils/api')
 
 module.exports = {
   namespace: 'player',
@@ -133,7 +133,6 @@ module.exports = {
           console.log(err)
         })
       }
-      
     },
     getRemoteTopFive: (data, state, send, done) => {
       // set users from firebase
