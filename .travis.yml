@@ -6,5 +6,5 @@ before_deploy:
 deploy:
   provider: surge
   project: ./dist/
-  domain: tic-tac-choo.surge.sh
+  domain: https://tic-tac-choo.surge.sh
   skip_cleanup: true
