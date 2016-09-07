@@ -18,6 +18,10 @@ module.exports = {
     users: []
   },
   reducers: {
+    load: (data, state) => {
+      let localState = data.localState.player
+      return localState
+    },
     /**
      * set initial data
      */
@@ -49,9 +53,9 @@ module.exports = {
     }
   },
   effects: {
-    /**
-     * player move
-     */
+    firstLoad: (data, state, send, done) => {
+      send('player:load', { localState: data.localState }, done)
+    },
     makeMove: (data, state, send, done) => {
       const x = data.x
       const y = data.y

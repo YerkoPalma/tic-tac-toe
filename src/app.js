@@ -1,6 +1,7 @@
 /* global navigator */
 const choo = require('choo')
 const sf = require('sheetify')
+const localforage = require('localforage')
 const mainView = require('./views/main')
 const gameView = require('./views/game')
 
@@ -13,6 +14,8 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(log())
 }
 
+app.use(offline())
+
 app.model(require('./models/board'))
 app.model(require('./models/player'))
 
@@ -23,6 +26,21 @@ app.router(route => [
 
 const tree = app.start({ hash: true })
 document.body.appendChild(tree)
+
+function offline () {
+  const onStateChange = (data, state, prev, createSend) => {
+    localforage.setItem('app', state).then(value => {
+      // Do other things once the value has been saved.
+      console.log(value)
+    }).catch(err => {
+      // This code runs if there were any errors
+      console.log(err)
+    })
+  }
+  return {
+    onStateChange
+  }
+}
 
 if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
   navigator.serviceWorker.register('service-worker.js').then(function (reg) {

@@ -1,9 +1,10 @@
 const html = require('choo/html')
+const localforage = require('localforage')
 const configPlayer = require('../components/config-player')
 
 const mainView = (state, prev, send) => {
   return html`
-    <div class="container" onload=${(e) => send('player:getRemoteTopFive')}>
+    <div class="container" onload=${firstLoad(state, send)}>
       <h1>Tic tac toe powered by choo</h1>
       <hr>
       <div class="wrapper center">
@@ -33,6 +34,22 @@ const mainView = (state, prev, send) => {
       </div>
     </div>
   `
+}
+
+function firstLoad (state, send) {
+  return function () {
+    send('player:getRemoteTopFive')
+    if (state.board.initial) {
+      localforage.getItem('app').then(localState => {
+        if (localState) {
+          send('player:firstLoad', { localState })
+          send('board:firstLoad', { localState })
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  }
 }
 
 module.exports = mainView

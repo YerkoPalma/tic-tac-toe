@@ -26,10 +26,13 @@
   "dependencies": {
     "axios": "^0.14.0",
     "choo": "^3.0.2",
+    "localforage": "^1.4.2",
     "normalize.css": "^4.2.0"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.9.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-es2015-loose": "^7.0.0",
     "budo": "^8.3.0",
     "choo-log": "^1.4.0",
     "dependency-check": "^2.5.3",
