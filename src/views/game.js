@@ -44,8 +44,10 @@ const gameView = (state, prev, send) => {
     <div class="container">
       <h1>Hello ${state.player.name}!</h1>
       <div class="profile">
-        <p>Wins: ${state.player.wins}</p>
-        <p>Loses: ${state.player.loses}</p>
+        <p>
+          <span>Wins: <b>${state.player.wins}</b></span>
+          <span>Loses: <b>${state.player.loses}</b></span>
+        </p>
       </div>
       <div class="board">
         <table class="${state.board.winnerLine.length > 0 || state.board.availaiblePositions.length === 0

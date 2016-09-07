@@ -10,14 +10,26 @@ const mainView = (state, prev, send) => {
         ${configPlayer(state, send)}
       </div>
       <div class="rank-board">
-        ${state.player.users.map(user => {
-          return html`
-          <div class="user">
-            <p>${user.name}   | ${user.score} </p>
-            <br>
-          </div>
-          `
-        })}
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+          ${state.player.users.map((user, i) => {
+            return html`
+              <tr>
+                <td>${i + 1}</td>
+                <td>${user.name}</td>
+                <td>${user.score}</td>
+              </tr>
+            `
+          })}
+          </tbody>
+        </table>
       </div>
     </div>
   `
