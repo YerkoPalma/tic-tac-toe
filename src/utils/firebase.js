@@ -6,9 +6,9 @@ function toArray (obj) {
   let arr = keys.map(key => {
     return Object.assign(obj[key], { fbKey: key })
   })
-  // order by best score
+  // order by score
   return arr.sort((a, b) => {
-    return a.best - b.best
+    return b.score - a.score
   })
 }
 module.exports = {
