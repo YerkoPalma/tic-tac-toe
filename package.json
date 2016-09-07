@@ -6,15 +6,15 @@
   "scripts": {
     "deps": "dependency-check . && dependency-check . --extra --no-dev --ignore-module normalize.css",
     "copy": "mkdir -p dist && cp src/index.html CNAME dist/",
+    "sw": "sw-precache --root=dist --static-file-globs='dist/**/*.*'",
     "dev": "budo src/app.js --open --live --pushstate --host 0.0.0.0 --port 8080 --",
-    "build": "npm run copy && NODE_ENV=production browserify -e src/app.js -o dist/app.js -t envify -t sheetify/transform -g unassertify -g es2040 -g uglifyify | uglifyjs",
+    "build": "npm run copy && NODE_ENV=production browserify -e src/app.js -o dist/app.js -t envify -t sheetify/transform -g unassertify -g es2040 -g uglifyify | uglifyjs && npm run sw",
     "test": "standard --verbose | snazzy && npm run deps",
     "deploy": "npm run build && surge ./dist"
   },
   "browserify": {
     "transform": [
-      "sheetify/transform",
-      "babelify"
+      "sheetify/transform"
     ]
   },
   "keywords": [
@@ -30,8 +30,6 @@
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
-    "babelify": "^7.3.0",
-    "browserify": "^13.0.1",
     "budo": "^8.3.0",
     "choo-log": "^1.4.0",
     "dependency-check": "^2.5.3",
@@ -41,8 +39,10 @@
     "sheetify": "^5.0.3",
     "snazzy": "^4.0.1",
     "standard": "^7.1.2",
+    "sw-precache": "^4.0.0",
     "uglify-js": "^2.7.0",
     "uglifyify": "^3.0.2",
-    "unassertify": "^2.0.3"
+    "unassertify": "^2.0.3",
+    "yo-yoify": "^3.4.1"
   }
 }
