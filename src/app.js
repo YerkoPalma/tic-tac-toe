@@ -31,7 +31,6 @@ function offline () {
   const onStateChange = (data, state, prev, createSend) => {
     localforage.setItem('app', state).then(value => {
       // Do other things once the value has been saved.
-      console.log(value)
     }).catch(err => {
       // This code runs if there were any errors
       console.log(err)
