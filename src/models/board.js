@@ -1,6 +1,7 @@
 module.exports = {
   namespace: 'board',
   state: {
+    initial: true,
     grid: [['', '', ''],
            ['', '', ''],
            ['', '', '']],
@@ -9,9 +10,11 @@ module.exports = {
     winner: ''
   },
   reducers: {
-    /**
-     * updates the board, should be triggered after every move
-     */
+    load: (data, state) => {
+      let localState = data.localState.player
+      localState.initial = false
+      return localState
+    },
     update: (data, state) => {
       const grid = state.grid
       grid[data.x][data.y] = data.figure
@@ -47,6 +50,9 @@ module.exports = {
     }
   },
   effects: {
+    firstLoad: (data, state, send, done) => {
+      send('board:load', { localState: data.localState }, done)
+    },
     /**
      * fully restart the game
      */

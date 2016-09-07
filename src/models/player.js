@@ -1,21 +1,35 @@
+const checkWinner = require('../utils/check')
+const firebaseUtils = require('../utils/firebase')
+const { getPlayers, postPlayer, patchPlayer } = require('../utils/api')
+
 module.exports = {
   namespace: 'player',
   state: {
     name: '',
     id: '',
     figure: 'X',
-    points: 0,
-    multiplayer: false
+    score: 0,
+    wins: 0,
+    loses: 0,
+    last: new Date(),
+    best: 0,
+    fbKey: '',
+    current: 0,
+    users: []
   },
   reducers: {
+    load: (data, state) => {
+      let localState = data.localState.player
+      return localState
+    },
     /**
      * set initial data
      */
     init: (data, state) => {
-      return {
-        name: data.player,
-        id: '1'
-      }
+      let users = state.users
+      data.user.fbKey = data.fbKey
+      if (!state.users[data.fbKey]) users.push(data.user)
+      return Object.assign(state, data.user, { fbKey: data.fbKey }, { users })
     },
     /**
      * reset player
@@ -28,12 +42,20 @@ module.exports = {
         points: 0,
         multiplayer: false
       }
+    },
+    setTopFive: (data, state) => {
+      return {
+        users: data.users
+      }
+    },
+    update: (data, state) => {
+      return Object.assign(state, data.user)
     }
   },
   effects: {
-    /**
-     * player move
-     */
+    firstLoad: (data, state, send, done) => {
+      send('player:load', { localState: data.localState }, done)
+    },
     makeMove: (data, state, send, done) => {
       const x = data.x
       const y = data.y
@@ -48,10 +70,26 @@ module.exports = {
       // TODO: before making an oponent move, should evaluate if the payer has won
       const check = checkWinner(data.grid, {x, y}, state.figure)
       if (check.winner && check.winner !== '') {
-        console.log(`The winner is ${check.winner}`)
-        send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
-      }
-      if (!state.multiplayer && availaiblePositions.length > 0) {
+        const foundUser = state.users.find(user => {
+          return user.name === state.name
+        })
+        // victory
+        if (check.winner === state.figure) {
+          foundUser.wins++
+          foundUser.score++
+        // defeat
+        } else if (check.line.length > 0) {
+          foundUser.loses++
+          foundUser.score--
+        }
+        patchPlayer(foundUser).then(response => {
+          send('player:update', { user: foundUser }, done)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        }).catch(err => {
+          console.log(err)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        })
+      } else if (availaiblePositions.length > 0) {
         // get random number to retrieve the availaible positions
         const randomPos = Math.floor(Math.random() * availaiblePositions.length)
         const pos = availaiblePositions[randomPos]
@@ -67,7 +105,6 @@ module.exports = {
      * opponent move
      */
     autoMove: (data, state, send, done) => {
-      // TODO: should select the figure of the oponent
       const x = data.autoX
       const y = data.autoY
       // position in the board to be removed
@@ -81,66 +118,75 @@ module.exports = {
       send('board:update', { x, y, figure, availaible: availaiblePositions }, done)
       const check = checkWinner(data.grid, {x, y}, figure)
       if (check.winner && check.winner !== '') {
-        console.log(`The winner is ${check.winner}`)
-        send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        const foundUser = state.users.find(user => {
+          return user.name === state.name
+        })
+        // victory
+        if (check.winner === state.figure) {
+          foundUser.wins++
+          foundUser.score++
+        // defeat
+        } else if (check.line.length > 0) {
+          foundUser.loses++
+          foundUser.score--
+        // draw
+        }
+        patchPlayer(foundUser).then(response => {
+          send('player:update', { user: foundUser }, done)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        }).catch(err => {
+          console.log(err)
+          send('board:finish', { winnerLine: check.line, winner: check.winner }, done)
+        })
       }
     },
     join: (data, state, send, done) => {
-      send('player:init',
-        { player: document.getElementById('player').value },
-        done)
-      send('location:setLocation', { location: '/game' }, done)
-      window.history.pushState({}, null, '/game')
+      // check if player already exists
+      const name = document.getElementById('player').value
+      const foundUser = state.users.find(user => {
+        return user.name === name
+      })
+      // if already exists, just updates the info
+      if (foundUser) {
+        patchPlayer(foundUser).then(response => {
+          send('player:init',
+          { user: response.data[foundUser.fbKey] },
+          done)
+          send('location:setLocation', { location: '/game' }, done)
+          window.history.pushState({}, null, '/game')
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        let user = {
+          name,
+          score: 0,
+          wins: 0,
+          loses: 0,
+          last: new Date(),
+          best: 0,
+          current: 0
+        }
+        postPlayer(user).then(response => {
+          send('player:init',
+          { user, fbKey: response.data.name },
+          done)
+          send('location:setLocation', { location: '/game' }, done)
+          window.history.pushState({}, null, '/game')
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    getRemoteTopFive: (data, state, send, done) => {
+      // set users from firebase
+      // make an http request for that
+      getPlayers().then(response => {
+        const jsonData = firebaseUtils.toArray(response.data)
+        send('player:setTopFive', { users: jsonData }, done)
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
-}
-
-/*
- * get the winner of the game and the winner line, or null if no onw has win
- */
-function checkWinner (grid, lastMove, lastPlayer) {
-  let winner
-  let line
-  grid[lastMove.x][lastMove.y] = lastPlayer
-  // row 0
-  if ((grid[0][0] && grid[0][0] !== '') && (grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2])) {
-    winner = grid[0][0]
-    line = [[0, 0], [0, 1], [0, 2]]
-  }
-  // row 1
-  if ((grid[1][0] && grid[1][0] !== '') && (grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2])) {
-    winner = grid[1][0]
-    line = [[1, 0], [1, 1], [1, 2]]
-  }
-  // row 2
-  if ((grid[2][0] && grid[2][0] !== '') && (grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2])) {
-    winner = grid[2][0]
-    line = [[2, 0], [2, 1], [2, 2]]
-  }
-  // column 0
-  if ((grid[0][0] && grid[0][0] !== '') && (grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0])) {
-    winner = grid[0][0]
-    line = [[0, 0], [1, 0], [2, 0]]
-  }
-  // column 1
-  if ((grid[0][1] && grid[0][1] !== '') && (grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1])) {
-    winner = grid[0][1]
-    line = [[0, 1], [1, 1], [2, 1]]
-  }
-  // column 2
-  if ((grid[0][2] && grid[0][2] !== '') && (grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2])) {
-    winner = grid[0][2]
-    line = [[0, 2], [1, 2], [2, 2]]
-  }
-  // diagonal \
-  if ((grid[0][0] && grid[0][0] !== '') && (grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2])) {
-    winner = grid[0][0]
-    line = [[0, 0], [1, 1], [2, 2]]
-  }
-  // diagonal /
-  if ((grid[0][2] && grid[0][2] !== '') && (grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0])) {
-    winner = grid[0][2]
-    line = [[0, 2], [1, 1], [2, 0]]
-  }
-  return { winner, line }
 }
