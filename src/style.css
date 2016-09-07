@@ -121,3 +121,15 @@ button:hover {
   float: right;
   margin-right: 50px;
 }
+.rank-board {
+  width: 100%;
+}
+.rank-board > table {
+  margin: 0 auto;
+}
+.profile {
+  width: 100%;
+}
+.profile > p {
+  text-align: center;
+}

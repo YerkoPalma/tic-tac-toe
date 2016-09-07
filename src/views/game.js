@@ -1,5 +1,5 @@
 const html = require('choo/html')
-const finishedGame = require('./finished-game')
+const finishedGame = require('../components/finished-game')
 
 const createBoard = (state, send) => {
   return html`
@@ -43,6 +43,12 @@ const gameView = (state, prev, send) => {
   return html`
     <div class="container">
       <h1>Hello ${state.player.name}!</h1>
+      <div class="profile">
+        <p>
+          <span>Wins: <b>${state.player.wins}</b></span>
+          <span>Loses: <b>${state.player.loses}</b></span>
+        </p>
+      </div>
       <div class="board">
         <table class="${state.board.winnerLine.length > 0 || state.board.availaiblePositions.length === 0
                         ? 'finished' : ''}">
