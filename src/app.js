@@ -5,13 +5,7 @@ const localforage = require('localforage')
 const mainView = require('./views/main')
 const gameView = require('./views/game')
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-           .register('workers/service-worker.js')
-           .then(function () { console.log('Service Worker Registered') })
-}
-
-sf('normalize.css')
+sf('tachyons')
 sf('./style.css', { global: true })
 
 const app = choo()

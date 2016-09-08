@@ -6,7 +6,7 @@ const createBoard = (state, send) => {
     <tbody>
       ${state.board.grid.map((row, x) => {
         return html `
-          <tr>
+          <tr class="h4">
             ${row.map((column, y) => {
               const isSelected = () => column !== '' ? 'selected' : ''
               const isMarked = () => {
@@ -22,8 +22,8 @@ const createBoard = (state, send) => {
                 return markedClass
               }
               return html`
-                <td class="${isSelected()} ${isMarked()}">
-                  <span onclick=${onClick}>
+                <td class="w-33 bg-washed-yellow ${isSelected()} ${isMarked()}">
+                  <span class="w-100 ph5-l ph5-m ph5 f-subheadline" onclick=${onClick}>
                     ${column !== '' ? column : state.player.figure}
                   </span>
                 </td>`
@@ -41,16 +41,16 @@ const createBoard = (state, send) => {
 
 const gameView = (state, prev, send) => {
   return html`
-    <div class="container">
-      <h1>Hello ${state.player.name}!</h1>
-      <div class="profile">
-        <p>
+    <div class="flex flex-wrap">
+      <h1 class="w-100 tc">Hello ${state.player.name}!</h1>
+      <div class="w-100">
+        <p class="tc">
           <span>Wins: <b>${state.player.wins}</b></span>
           <span>Loses: <b>${state.player.loses}</b></span>
         </p>
       </div>
-      <div class="board">
-        <table class="${state.board.winnerLine.length > 0 || state.board.availaiblePositions.length === 0
+      <div class="board overflow-hidden w-100 pv5 pf4">
+        <table class="relative w-100 w-80-m w-40-l center ${state.board.winnerLine.length > 0 || state.board.availaiblePositions.length === 0
                         ? 'finished' : ''}">
           ${finishedGame(state, send)}
           ${createBoard(state, send)}

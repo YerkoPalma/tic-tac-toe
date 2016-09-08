@@ -27,7 +27,8 @@
     "axios": "^0.14.0",
     "choo": "^3.0.2",
     "localforage": "^1.4.2",
-    "normalize.css": "^4.2.0"
+    "normalize.css": "^4.2.0",
+    "tachyons": "^4.3.0"
   },
   "devDependencies": {
     "babel-plugin-add-module-exports": "^0.2.1",
