@@ -4,7 +4,7 @@
   "description": "progressive, multiplayer tic tac toe, made with choo",
   "main": "src/app.js",
   "scripts": {
-    "deps": "dependency-check . && dependency-check . --extra --no-dev --ignore-module normalize.css",
+    "deps": "dependency-check . && dependency-check . --extra --no-dev --ignore-module tachyons",
     "copy": "mkdir -p dist && cp src/index.html src/manifest.json CNAME dist/ && cp -R src/images dist",
     "sw": "sw-precache --root=dist --static-file-globs='dist/**/*.*'",
     "dev": "budo src/app.js --open --live --pushstate --host 0.0.0.0 --port 8080 --",
@@ -27,7 +27,6 @@
     "axios": "^0.14.0",
     "choo": "^3.0.2",
     "localforage": "^1.4.2",
-    "normalize.css": "^4.2.0",
     "tachyons": "^4.3.0"
   },
   "devDependencies": {
