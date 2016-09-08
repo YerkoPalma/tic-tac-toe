@@ -12,9 +12,9 @@ const finishedGame = (state, send) => {
     return html`
     <div class="finish-panel">
       <h3>${message}</h3>
-      <div class="clearfix">
-        <button onclick=${e => send('board:restart')}>Restart</button>
-        <button onclick=${e => send('board:replay')}>Replay</button>
+      <div class="absolute justify-around flex w-100 mv5 mv6-l mv6-m mv6-ns flex-column flex-row-ns flex-row-m flex-row-l">
+        <button class="pa2 w4-l w4-m w4-ns w5 mv3 br3 ba b--black-50 self-center pointer" onclick=${e => send('board:restart')}>Restart</button>
+        <button class="pa2 w4-l w4-m w4-ns w5 mv3 br3 ba b--black-50 self-center fr pointer" onclick=${e => send('board:replay')}>Replay</button>
       </div>
     </div>
     `
