@@ -24,8 +24,6 @@
   </a>
 </div>
 
-> Progressive tic tac toe game, made with choo
-
 ![image](https://cloud.githubusercontent.com/assets/5105812/18414943/bbb8811e-77b4-11e6-9a18-8d7c72164f29.png)
 
 ## Idea
