@@ -1,5 +1,5 @@
 <h1 align="center">Tic tac toe</h1>
-<div align="center">(WIP) Progressive tic tac toe game, made with choo</div>
+<div align="center">Progressive tic tac toe game, made with choo</div>
 <br />
 <div align="center">
   <!-- Stability -->
@@ -24,18 +24,19 @@
   </a>
 </div>
 
-## TODO
+> Progressive tic tac toe game, made with choo
 
-- Record users if they don't exists
-- Record matches when they finish
-- Update data when games finish
-- Add board to `board` view including, wins, loses and rank
-  - Create the user-info component
-  - Create the effects to update
-  - Update from firebase
-  - Update from indexedDb
-- Add top 5 users in `main` view including username, wins, loses, last-connection
-  - Create the board component
-  - Create the effects to update
-  - Update from firebase
-  - Update from indexedDb 
+![image](https://cloud.githubusercontent.com/assets/5105812/18414943/bbb8811e-77b4-11e6-9a18-8d7c72164f29.png)
+
+## Idea
+
+The main idea is almost the same of every progressive web app, use a service worker together with a local storage system to offer a full offline experience. Now there is some limitations in this implementation that I will discuss later, but generally, the idea is to use the service worker, through the [`se-precache`](https://github.com/GoogleChrome/sw-precache) chrome library, to cache only the assets, and leave the data (the state of the [choo](https://github.com/yoshuawuyts/choo) app) to be handled with [localforage](https://github.com/localForage/localForage), which use indexDB when availaible with a fallback to webSQL for older browsers.
+
+## Limitations
+
+An actual limitation is that even when the app has a fast first load thanks to the offline approach, right now to use the app it currently depends on the network to be availaible, now to fully support offline work is necesary to handle the net status and define a fallback function for that situation.
+
+## License
+
+MIT © [Yerko Palma](https://github.com/YerkoPalma)
+
