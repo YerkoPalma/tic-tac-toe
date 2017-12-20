@@ -5,6 +5,8 @@ css('tachyons')
 css('./style.css', { global: true })
 
 var app = choo()
+app.use(require('./stores/game'))
+
 if (process.env.NODE_ENV !== 'production') {
   app.use(require('choo-devtools')())
 } else {
@@ -12,6 +14,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.route('/', require('./views/main'))
-// app.route('/game', require('./views/game'))
+app.route('/game', require('./views/game'))
 // app.route('/*', require('./views/notFound'))
 app.mount('body')
