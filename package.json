@@ -26,15 +26,17 @@
   "license": "MIT",
   "dependencies": {
     "choo": "^6.6.0",
+    "choo-service-worker": "^2.3.1",
     "tachyons": "^4.3.0"
   },
   "devDependencies": {
-    "budo": "^8.3.0",
+    "budo": "^10.0.4",
+    "choo-devtools": "^2.3.0",
     "dependency-check": "^2.5.3",
-    "sheetify": "^5.0.3",
-    "snazzy": "^4.0.1",
-    "standard": "^7.1.2",
-    "surge": "^0.18.0",
-    "yo-yoify": "^3.4.1"
+    "sheetify": "^6.2.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "surge": "^0.19.0",
+    "yo-yoify": "^4.2.0"
   }
 }

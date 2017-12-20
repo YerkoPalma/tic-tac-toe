@@ -2,7 +2,7 @@ var html = require('choo/html')
 
 var mainView = (state, emit) => {
   return html`
-    <div>
+    <body>
       <header class="tc pv3 pv4-ns cf">
         <h1 class="f2 f2-ns fw6 mid-gray">Tic tac toe powered by choo</h1>
       </header>
@@ -22,7 +22,7 @@ var mainView = (state, emit) => {
             </tr>
           </thead>
           <tbody>
-          ${state.player.users.map((user, i) => {
+          ${state.player && state.player.users.map((user, i) => {
             return html`
               <tr class="striped--near-white">
                 <td class="pv2 ph3">${i + 1}</td>
@@ -34,7 +34,7 @@ var mainView = (state, emit) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </body>
   `
 }
 

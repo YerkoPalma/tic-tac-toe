@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(require('choo-service-worker')())
 }
 
-app.route('/', require('./views/main')),
-app.route('/game', require('./views/game'))
-app.route('/*', require('./views/notFound'))
+app.route('/', require('./views/main'))
+// app.route('/game', require('./views/game'))
+// app.route('/*', require('./views/notFound'))
 app.mount('body')
