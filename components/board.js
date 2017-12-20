@@ -38,12 +38,22 @@ Board.prototype.createElement = function (state, emit) {
 
 Board.prototype.clickCell = function (e) {
   e.preventDefault()
+  if (this.winner) return
   var id = e.target.dataset.id
-  if (!this.cells[id]) {
-    this.cells[id] = this._ctx.currentPlayer
-  }
+  if (this.cells[id]) return
+  this.cells[id] = this._ctx.currentPlayer
+
   if (isVictory.call(this)) {
     this.winner = this._ctx.currentPlayer
+  } else {
+    // if there was no win, make auto move
+    var availaible = []
+    this.cells.forEach((cell, i) => {
+      if (cell === null) availaible.push(i)
+    })
+    var randomId = getRandomId(availaible)
+    this.cells[availaible[randomId]] = 'O'
+    if (isVictory.call(this)) this.winner = 'O'
   }
   this.render()
 }
@@ -53,6 +63,14 @@ Board.prototype.update = function (state, emit) {
 }
 
 module.exports = Board
+
+function getRandomId (arr) {
+  var max = arr.length - 1
+  var min = 0
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
 
 function isVictory () {
   var positions = [

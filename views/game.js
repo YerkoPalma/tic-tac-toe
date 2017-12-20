@@ -5,7 +5,6 @@ var board = Board()
 
 var mainView = (state, emit) => {
   state.player = {}
-  state.cells = state.cells || Array(9).fill(null)
   return html`
   <body>
     <div class="flex flex-wrap">
