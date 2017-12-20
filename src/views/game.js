@@ -5,7 +5,7 @@ const createBoard = (state, send) => {
   return html`
     <tbody>
       ${state.board.grid.map((row, x) => {
-        return html `
+        return html`
           <tr class="h4">
             ${row.map((column, y) => {
               const isSelected = () => column !== '' ? 'selected' : ''

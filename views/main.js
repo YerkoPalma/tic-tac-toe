@@ -30,8 +30,8 @@ var mainView = (state, emit) => {
                 <td class="pv2 ph3">${user.score}</td>
               </tr>
             `
-          }) :
-            html`<tr class="striped--near-white">
+          })
+          : html`<tr class="striped--near-white">
               <td colspan="3" class="pv2 ph3">
                 No results to display
               </td>
