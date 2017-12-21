@@ -32,7 +32,7 @@ var mainView = (state, emit) => {
             `
           })
           : html`<tr class="striped--near-white">
-              <td colspan="3" class="pv2 ph3">
+              <td colspan="3" class="tc pv2 ph3">
                 No results to display
               </td>
             </tr>`

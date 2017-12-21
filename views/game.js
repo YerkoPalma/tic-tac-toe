@@ -16,9 +16,7 @@ var mainView = (state, emit) => {
         </p>
       </div>
       <div class="board overflow-hidden w-100 pv5 pf4">
-        <table class="relative w-100 w-80-m w-40-l center ">
-          ${board.render(state, emit)}
-        </table>
+        ${board.render(state, emit)}
       </div>
     </div>
   </body>
