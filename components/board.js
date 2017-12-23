@@ -1,5 +1,5 @@
 var Nanocomponent = require('nanocomponent')
-var html = require('bel')
+var html = require('choo/html')
 
 function Board () {
   if (!(this instanceof Board)) return new Board()
@@ -93,7 +93,7 @@ function isVictory () {
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6],
+    [2, 4, 6]
   ]
   for (var pos of positions) {
     var symbol = this.cells[pos[0]]

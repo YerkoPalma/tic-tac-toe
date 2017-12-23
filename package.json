@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "progressive, multiplayer tic tac toe, made with choo",
-  "main": "src/app.js",
+  "main": "index.js",
   "scripts": {
     "deps": "dependency-check . && dependency-check . --extra --no-dev --ignore-module tachyons",
     "copy": "mkdir -p dist && cp src/index.html src/manifest.json CNAME dist/ && cp -R src/images dist",
