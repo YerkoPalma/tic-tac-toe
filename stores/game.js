@@ -20,11 +20,12 @@ module.exports = function (state, emitter) {
       })
     })
     .then(response => response.json())
-    .then(() => {
+    .then(user => {
+      state.player = user
       emitter.emit(state.events.PUSHSTATE, '/game')
     })
     .catch(err => {
-      throw(err)
+      throw err
     })
   })
 }

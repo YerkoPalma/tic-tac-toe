@@ -15,13 +15,28 @@ fastify.register(require('fastify-leveldb'), {
 
 fastify.post('/users', (req, reply) => {
   const { level } = fastify
-  level.put(req.body.name, {
-    wins: 0,
-    loses: 0,
-    score: 0,
-    last: new Date()
-  }, (err) => {
-    reply.send(err || { status: 'ok' })
+  level.get(req.body.name, function (err, value) {
+    if (err) {
+      if (err.notFound) {
+        level.put(req.body.name, {
+          wins: 0,
+          loses: 0,
+          score: 0,
+          last: new Date()
+        }, err => {
+          reply.send(err || {
+            name: req.body.name,
+            wins: 0,
+            loses: 0,
+            score: 0,
+            last: new Date()
+          })
+        })
+      } else {
+        if (err) reply.send(err)
+      }
+    }
+    reply.send(Object.assign({ name: req.body.name }, value))
   })
 })
 

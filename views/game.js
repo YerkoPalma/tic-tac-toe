@@ -4,7 +4,6 @@ var Board = require('../components/board')
 var board = Board()
 
 var mainView = (state, emit) => {
-  state.player = {}
   return html`
   <body>
     <div class="flex flex-wrap">

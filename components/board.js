@@ -15,18 +15,21 @@ function Board () {
 
   Nanocomponent.call(this)
   this.clickCell = this.clickCell.bind(this)
+  this.replay = this.replay.bind(this)
+  this.return = this.return.bind(this)
 }
 Board.prototype = Object.create(Nanocomponent.prototype)
 
 Board.prototype.createElement = function (state, emit) {
+  this._emit = emit
   return html`
   <table class="relative w-100 w-80-m w-40-l center ${this.winner ? 'finished' : ''}">
     ${this.winner
       ? html`<div class="finish-panel">
         <h3>Game over</h3>
         <div class="absolute justify-around flex w-100 mv5 mv6-l mv6-m mv6-ns flex-column flex-row-ns flex-row-m flex-row-l">
-          <button class="pa2 w4-l w4-m w4-ns w5 mv3 br3 ba b--black-50 self-center pointer" onclick=${e => emit('board:restart')}>Restart</button>
-          <button class="pa2 w4-l w4-m w4-ns w5 mv3 br3 ba b--black-50 self-center fr pointer" onclick=${e => emit('board:replay')}>Replay</button>
+          <button class="pa2 w4-l w4-m w4-ns w5 mv3 br3 ba b--black-50 self-center pointer" onclick=${this.return}>Return</button>
+          <button class="pa2 w4-l w4-m w4-ns w5 mv3 br3 ba b--black-50 self-center fr pointer" onclick=${this.replay}>Replay</button>
         </div>
       </div>`
       : ''
@@ -48,6 +51,22 @@ Board.prototype.createElement = function (state, emit) {
   </table>`
 }
 
+Board.prototype.return = function (e) {
+  e.preventDefault()
+  this.winner = null
+  this.winnerLine = []
+  this.cells = Array(9).fill(null)
+  this._emit('pushState', '/')
+}
+
+Board.prototype.replay = function (e) {
+  e.preventDefault()
+  this.winner = null
+  this.winnerLine = []
+  this.cells = Array(9).fill(null)
+  this.render(this._state, this._emit)
+}
+
 Board.prototype.clickCell = function (e) {
   e.preventDefault()
   if (this.winner) return
@@ -67,10 +86,11 @@ Board.prototype.clickCell = function (e) {
     this.cells[availaible[randomId]] = 'O'
     if (isVictory.call(this)) this.winner = 'O'
   }
-  this.render()
+  this.render(this._state, this._emit)
 }
 
 Board.prototype.update = function (state, emit) {
+  this._emit = emit
   return true
 }
 
