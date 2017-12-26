@@ -22,7 +22,7 @@ var mainView = (state, emit) => {
             </tr>
           </thead>
           <tbody>
-          ${state.player ? state.player.users.map((user, i) => {
+          ${state.players ? state.players.map((user, i) => {
             return html`
               <tr class="striped--near-white">
                 <td class="pv2 ph3">${i + 1}</td>

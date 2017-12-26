@@ -5,19 +5,22 @@ fastify.register(require('fastify-bankai'), {
 })
 
 fastify.register(require('fastify-leveldb'), {
-  name: 'db'
+  name: 'db',
+  options: {
+    valueEncoding: 'json'
+  }
 }, err => {
   if (err) throw err
 })
 
 fastify.post('/users', (req, reply) => {
   const { level } = fastify
-  level.put(req.body.name, JSON.stringify({
+  level.put(req.body.name, {
     wins: 0,
     loses: 0,
     score: 0,
     last: new Date()
-  }), (err) => {
+  }, (err) => {
     reply.send(err || { status: 'ok' })
   })
 })
@@ -27,8 +30,7 @@ fastify.get('/users', (req, reply) => {
   var users = []
   level.createReadStream()
     .on('data', function (data) {
-      var o = {}
-      o[data.key] = data.value
+      var o = Object.assign({ name: data.key }, data.value)
       users.push(o)
     })
     .on('error', function (err) {

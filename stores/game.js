@@ -1,8 +1,17 @@
 /* global fetch Headers */
 module.exports = function (state, emitter) {
-  var headers = new Headers()
-  headers.append('Content-Type', 'application/json')
+  emitter.on('DOMContentLoaded', function () {
+    fetch('/users')
+    .then(response => response.json())
+    .then(users => {
+      state.players = users
+      emitter.emit('render')
+    })
+  })
+
   emitter.on('player:join', function (name) {
+    var headers = new Headers()
+    headers.append('Content-Type', 'application/json')
     fetch('/users', {
       method: 'POST',
       headers,
