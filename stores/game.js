@@ -28,4 +28,25 @@ module.exports = function (state, emitter) {
       throw err
     })
   })
+  emitter.on('player:update', function ({ name, player }) {
+    var headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+    fetch('/users/' + name, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(player)
+    })
+    .then(response => {
+      if (response.ok) {
+        player.name = name
+        state.player = player
+        var index
+        state.players.filter((p, i) => {
+          index = i
+          return player.name === p.name
+        })
+        state.players[index] = player
+      }
+    })
+  })
 }

@@ -1,4 +1,6 @@
-var fastify = require('fastify')()
+var fastify = require('fastify')({
+  logger: true
+})
 
 fastify.register(require('fastify-bankai'), {
   entry: './index.js'
@@ -11,6 +13,16 @@ fastify.register(require('fastify-leveldb'), {
   }
 }, err => {
   if (err) throw err
+})
+
+fastify.put('/users/:user', (req, reply) => {
+  var { level } = fastify
+  var user = req.params.user
+  var value = req.body
+  level.put(user, value, function (err) {
+    if (err) reply.send(err)
+    else reply.send({ status: 'ok' })
+  })
 })
 
 fastify.post('/users', (req, reply) => {

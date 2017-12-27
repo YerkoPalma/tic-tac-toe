@@ -22,6 +22,7 @@ Board.prototype = Object.create(Nanocomponent.prototype)
 
 Board.prototype.createElement = function (state, emit) {
   this._emit = emit
+  this._state = state
   return html`
   <table class="relative w-100 w-80-m w-40-l center ${this.winner ? 'finished' : ''}">
     ${this.winner
@@ -75,7 +76,15 @@ Board.prototype.clickCell = function (e) {
   this.cells[id] = this._ctx.currentPlayer
 
   if (isVictory.call(this)) {
-    this.winner = this._ctx.currentPlayer
+    this._emit('player:update', {
+      name: this._state.player.name,
+      player: {
+        wins: this._state.player.wins + (this.winner === this._ctx.currentPlayer ? 1 : 0),
+        loses: this._state.player.loses + (this.winner !== this._ctx.currentPlayer ? 1 : 0),
+        score: this._state.player.score + (this.winner === this._ctx.currentPlayer ? 1 : -1),
+        last: new Date()
+      }
+    })
   } else {
     // if there was no win, make auto move
     var availaible = []
@@ -84,13 +93,24 @@ Board.prototype.clickCell = function (e) {
     })
     var randomId = getRandomId(availaible)
     this.cells[availaible[randomId]] = 'O'
-    if (isVictory.call(this)) this.winner = 'O'
+    if (isVictory.call(this)) {
+      this._emit('player:update', {
+        name: this._state.player.name,
+        player: {
+          wins: this._state.player.wins + (this.winner === this._ctx.currentPlayer ? 1 : 0),
+          loses: this._state.player.loses + (this.winner !== this._ctx.currentPlayer ? 1 : 0),
+          score: this._state.player.score + (this.winner === this._ctx.currentPlayer ? 1 : -1),
+          last: new Date()
+        }
+      })
+    }
   }
   this.render(this._state, this._emit)
 }
 
 Board.prototype.update = function (state, emit) {
   this._emit = emit
+  this._state = state
   return true
 }
 
@@ -117,14 +137,14 @@ function isVictory () {
   ]
   for (var pos of positions) {
     var symbol = this.cells[pos[0]]
-    var winner = symbol
+    this.winner = symbol
     for (var i of pos) {
       if (this.cells[i] !== symbol) {
-        winner = null
+        this.winner = null
         break
       }
     }
-    if (winner !== null) {
+    if (this.winner !== null) {
       this.winnerLine = pos
       return true
     }
