@@ -3,3 +3,4 @@ dist
 *.log
 service-worker.js
 db
+package-lock.json

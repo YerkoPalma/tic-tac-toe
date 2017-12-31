@@ -25,7 +25,7 @@
   "author": "YerkoPalma",
   "license": "MIT",
   "dependencies": {
-    "choo": "^6.6.0",
+    "choo": "^6.6.1",
     "choo-service-worker": "^2.3.1",
     "fastify": "^0.37.0",
     "fastify-bankai": "^0.3.1",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "budo": "^10.0.4",
-    "choo-devtools": "^2.3.0",
+    "choo-devtools": "^2.3.2",
     "dependency-check": "^2.5.3",
     "pino-colada": "^1.4.2",
     "sheetify": "^6.2.0",
