@@ -8,7 +8,7 @@
     "deps": "dependency-check . --entry index.js && dependency-check . --extra --no-dev --ignore-module tachyons --entry index.js",
     "copy": "mkdir -p dist && cp src/index.html src/manifest.json CNAME dist/ && cp -R src/images dist",
     "sw": "sw-precache --root=dist --static-file-globs='dist/**/*.*'",
-    "start": "node server.js | pino-colada",
+    "start": "node server.js",
     "build": "npm run copy && NODE_ENV=production browserify -e src/app.js -o dist/app.js -t envify -t sheetify/transform -g unassertify -g es2040 -g uglifyify | uglifyjs && npm run sw",
     "test": "standard --verbose | snazzy && npm run deps",
     "deploy": "npm run build && surge ./dist"
@@ -34,14 +34,11 @@
     "tachyons": "^4.3.0"
   },
   "devDependencies": {
-    "budo": "^10.0.4",
     "choo-devtools": "^2.3.2",
     "dependency-check": "^2.5.3",
-    "pino-colada": "^1.4.2",
     "sheetify": "^6.2.0",
     "snazzy": "^7.0.0",
     "standard": "^10.0.3",
-    "surge": "^0.19.0",
     "yo-yoify": "^4.2.0"
   }
 }
