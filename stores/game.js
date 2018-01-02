@@ -9,8 +9,7 @@ module.exports = function (state, emitter) {
     .then(users => {
       state.players = []
       for (var key in users) {
-        if (users[key].name)
-        state.players.push(Object.assign(users[key], { key }))
+        if (users[key].name) { state.players.push(Object.assign(users[key], { key })) }
       }
       state.players.sort((a, b) => b.score - a.score)
       emitter.emit('render')
@@ -28,14 +27,14 @@ module.exports = function (state, emitter) {
       var headers = new Headers()
       headers.append('Content-Type', 'application/json')
       var player = {
-          name,
-          score: 0,
-          wins: 0,
-          loses: 0,
-          last: new Date(),
-          best: 0,
-          current: 0
-        }
+        name,
+        score: 0,
+        wins: 0,
+        loses: 0,
+        last: new Date(),
+        best: 0,
+        current: 0
+      }
       fetch(url, {
         method: 'POST',
         headers,
@@ -68,7 +67,7 @@ module.exports = function (state, emitter) {
       if (response.ok) {
         state.player = player
         var index
-        for(var p of state.players) {
+        for (var p of state.players) {
           if (p.key === key) index = state.players.indexOf(p)
         }
         state.players[index] = player

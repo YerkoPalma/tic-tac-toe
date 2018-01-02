@@ -29,7 +29,6 @@
     "choo-service-worker": "^2.3.1",
     "fastify": "^0.37.0",
     "fastify-bankai": "^0.3.1",
-    "fastify-leveldb": "^0.2.0",
     "nanocomponent": "^6.5.0",
     "tachyons": "^4.3.0"
   },
