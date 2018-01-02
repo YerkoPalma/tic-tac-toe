@@ -76,15 +76,12 @@ Board.prototype.clickCell = function (e) {
   this.cells[id] = this._ctx.currentPlayer
 
   if (isVictory.call(this)) {
-    this._emit('player:update', {
-      name: this._state.player.name,
-      player: {
-        wins: this._state.player.wins + (this.winner === this._ctx.currentPlayer ? 1 : 0),
-        loses: this._state.player.loses + (this.winner !== this._ctx.currentPlayer ? 1 : 0),
-        score: this._state.player.score + (this.winner === this._ctx.currentPlayer ? 1 : -1),
-        last: new Date()
-      }
-    })
+    this._emit('player:update', Object.assign(this._state.player, {
+      wins: this._state.player.wins + (this.winner === this._ctx.currentPlayer ? 1 : 0),
+      loses: this._state.player.loses + (this.winner !== this._ctx.currentPlayer ? 1 : 0),
+      score: this._state.player.score + (this.winner === this._ctx.currentPlayer ? 1 : -1),
+      last: new Date()
+    }))
   } else {
     // if there was no win, make auto move
     var availaible = []
@@ -94,15 +91,12 @@ Board.prototype.clickCell = function (e) {
     var randomId = getRandomId(availaible)
     this.cells[availaible[randomId]] = 'O'
     if (isVictory.call(this)) {
-      this._emit('player:update', {
-        name: this._state.player.name,
-        player: {
-          wins: this._state.player.wins + (this.winner === this._ctx.currentPlayer ? 1 : 0),
-          loses: this._state.player.loses + (this.winner !== this._ctx.currentPlayer ? 1 : 0),
-          score: this._state.player.score + (this.winner === this._ctx.currentPlayer ? 1 : -1),
-          last: new Date()
-        }
-      })
+      this._emit('player:update', Object.assign(this._state.player, {
+        wins: this._state.player.wins + (this.winner === this._ctx.currentPlayer ? 1 : 0),
+        loses: this._state.player.loses + (this.winner !== this._ctx.currentPlayer ? 1 : 0),
+        score: this._state.player.score + (this.winner === this._ctx.currentPlayer ? 1 : -1),
+        last: new Date()
+      }))
     }
   }
   this.render(this._state, this._emit)

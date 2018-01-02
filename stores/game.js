@@ -1,50 +1,76 @@
 /* global fetch Headers */
+const url = 'https://tic-tac-toe-d4f97.firebaseio.com/users.json'
+const userUrl = userKey => `https://tic-tac-toe-d4f97.firebaseio.com/users/${userKey}.json`
+
 module.exports = function (state, emitter) {
   emitter.on('DOMContentLoaded', function () {
-    fetch('/users')
+    fetch(url)
     .then(response => response.json())
     .then(users => {
-      state.players = users
+      state.players = []
+      for (var key in users) {
+        if (users[key].name)
+        state.players.push(Object.assign(users[key], { key }))
+      }
+      state.players.sort((a, b) => b.score - a.score)
       emitter.emit('render')
     })
   })
 
   emitter.on('player:join', function (name) {
-    var headers = new Headers()
-    headers.append('Content-Type', 'application/json')
-    fetch('/users', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        name
-      })
+    const foundUser = state.players.find(user => {
+      return user.name === name
     })
-    .then(response => response.json())
-    .then(user => {
-      state.player = user
+    if (foundUser) {
+      state.player = foundUser
       emitter.emit(state.events.PUSHSTATE, '/game')
-    })
-    .catch(err => {
-      throw err
-    })
+    } else {
+      var headers = new Headers()
+      headers.append('Content-Type', 'application/json')
+      var player = {
+          name,
+          score: 0,
+          wins: 0,
+          loses: 0,
+          last: new Date(),
+          best: 0,
+          current: 0
+        }
+      fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(player)
+      })
+      .then(response => response.json())
+      .then(user => {
+        state.player = player
+        player.key = user.name
+        state.players.push(player)
+        emitter.emit(state.events.PUSHSTATE, '/game')
+      })
+      .catch(err => {
+        throw err
+      })
+    }
   })
-  emitter.on('player:update', function ({ name, player }) {
+  emitter.on('player:update', function (player) {
     var headers = new Headers()
     headers.append('Content-Type', 'application/json')
-    fetch('/users/' + name, {
-      method: 'PUT',
+    var _url = userUrl(player.key)
+    var key = player.key
+    delete player.key
+    fetch(_url, {
+      method: 'PATCH',
       headers,
       body: JSON.stringify(player)
     })
     .then(response => {
       if (response.ok) {
-        player.name = name
         state.player = player
         var index
-        state.players.filter((p, i) => {
-          index = i
-          return player.name === p.name
-        })
+        for(var p of state.players) {
+          if (p.key === key) index = state.players.indexOf(p)
+        }
         state.players[index] = player
       }
     })
