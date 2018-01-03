@@ -3,15 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "progressive, multiplayer tic tac toe, made with choo",
-  "main": "src/app.js",
+  "main": "server.js",
   "scripts": {
-    "deps": "dependency-check . && dependency-check . --extra --no-dev --ignore-module tachyons",
-    "copy": "mkdir -p dist && cp src/index.html src/manifest.json CNAME dist/ && cp -R src/images dist",
-    "sw": "sw-precache --root=dist --static-file-globs='dist/**/*.*'",
-    "start": "budo index.js --open --live --pushstate --host 0.0.0.0 --port 8080 --",
-    "build": "npm run copy && NODE_ENV=production browserify -e src/app.js -o dist/app.js -t envify -t sheetify/transform -g unassertify -g es2040 -g uglifyify | uglifyjs && npm run sw",
-    "test": "standard --verbose | snazzy && npm run deps",
-    "deploy": "npm run build && surge ./dist"
+    "deps": "dependency-check . --entry index.js && dependency-check . --extra --no-dev --ignore-module tachyons --entry index.js",
+    "start": "node server.js",
+    "test": "standard --verbose | snazzy && npm run deps"
   },
   "browserify": {
     "transform": [
@@ -22,19 +18,29 @@
     "choo",
     "pwa"
   ],
+  "standard": {
+    "ignore": [
+      "workbox-*",
+      "sw.js"
+    ]
+  },
   "author": "YerkoPalma",
   "license": "MIT",
   "dependencies": {
-    "choo": "^6.6.0",
-    "tachyons": "^4.3.0"
+    "bankai": "^9.1.0",
+    "choo": "^6.6.1",
+    "choo-service-worker": "^2.3.1",
+    "nanocomponent": "^6.5.0",
+    "tachyons": "^4.9.1"
   },
   "devDependencies": {
-    "budo": "^8.3.0",
+    "choo-devtools": "^2.3.2",
     "dependency-check": "^2.5.3",
-    "sheetify": "^5.0.3",
-    "snazzy": "^4.0.1",
-    "standard": "^7.1.2",
-    "surge": "^0.18.0",
-    "yo-yoify": "^3.4.1"
+    "sheetify": "^6.2.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "workbox": "0.0.0",
+    "workbox-cli": "^2.1.2",
+    "yo-yoify": "^4.3.0"
   }
 }
