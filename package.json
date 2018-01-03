@@ -6,12 +6,8 @@
   "main": "server.js",
   "scripts": {
     "deps": "dependency-check . --entry index.js && dependency-check . --extra --no-dev --ignore-module tachyons --entry index.js",
-    "copy": "mkdir -p dist && cp src/index.html src/manifest.json CNAME dist/ && cp -R src/images dist",
-    "sw": "sw-precache --root=dist --static-file-globs='dist/**/*.*'",
     "start": "node server.js",
-    "build": "npm run copy && NODE_ENV=production browserify -e src/app.js -o dist/app.js -t envify -t sheetify/transform -g unassertify -g es2040 -g uglifyify | uglifyjs && npm run sw",
-    "test": "standard --verbose | snazzy && npm run deps",
-    "deploy": "npm run build && surge ./dist"
+    "test": "standard --verbose | snazzy && npm run deps"
   },
   "browserify": {
     "transform": [
@@ -38,6 +34,8 @@
     "sheetify": "^6.2.0",
     "snazzy": "^7.0.0",
     "standard": "^10.0.3",
+    "workbox": "0.0.0",
+    "workbox-cli": "^2.1.2",
     "yo-yoify": "^4.2.0"
   }
 }
