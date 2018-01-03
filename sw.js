@@ -1,4 +1,4 @@
-importScripts('workbox-sw.prod.v2.1.2.js');
+importScripts('assets/workbox-sw.prod.v2.1.2.js');
 
 /**
  * DO NOT EDIT THE FILE MANIFEST ENTRY
@@ -28,11 +28,11 @@ const fileManifest = [
   },
   {
     "url": "package.json",
-    "revision": "09a419145210610396f07040e440f100"
+    "revision": "62c5e08d9ab6d23aca26aa1af2eb35c3"
   },
   {
     "url": "server.js",
-    "revision": "b7c0901ce73d572405bf3d5da80c40b5"
+    "revision": "fe24c14635bea93c95bf3e372c108d84"
   },
   {
     "url": "stores/game.js",
