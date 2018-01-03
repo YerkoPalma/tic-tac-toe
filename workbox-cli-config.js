@@ -5,6 +5,7 @@ module.exports = {
   ],
   "swDest": "sw.js",
   "globIgnores": [
-    "workbox-cli-config.js"
+    "workbox-cli-config.js",
+    "node_modules/**"
   ]
 };

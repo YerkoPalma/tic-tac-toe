@@ -1,13 +1,15 @@
-var fastify = require('fastify')({
-  logger: true
+var bankai = require('bankai/http')
+var http = require('http')
+var path = require('path')
+
+var compiler = bankai(path.join(__dirname, 'index.js'))
+var server = http.createServer(function (req, res) {
+  compiler(req, res, function () {
+    res.statusCode = 404
+    res.end('not found')
+  })
 })
 
-fastify.register(require('fastify-bankai'), {
-  entry: './index.js'
-})
-
-fastify.listen(process.env.PORT || 8080, process.env.IP || 'localhost', err => {
-  if (err) throw err
-  var { port, address } = fastify.server.address()
-  console.log(`Server listenting on ${address}:${port}`)
+server.listen(process.env.PORT || 8080, process.env.IP || 'localhost', function () {
+  console.log('listening on port 8080')
 })

@@ -21,10 +21,9 @@
   "author": "YerkoPalma",
   "license": "MIT",
   "dependencies": {
+    "bankai": "^9.1.0",
     "choo": "^6.6.1",
     "choo-service-worker": "^2.3.1",
-    "fastify": "^0.37.0",
-    "fastify-bankai": "^0.3.1",
     "nanocomponent": "^6.5.0",
     "tachyons": "^4.3.0"
   },
